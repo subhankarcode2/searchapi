@@ -1,0 +1,11 @@
+USE [FlySearchDB]
+GO
+INSERT [dbo].[AspNetRoles] ([Id], [Name], [NormalizedName], [ConcurrencyStamp]) VALUES (N'c122a4cf-a936-48c9-976b-a74305498808', N'User', N'USER', N'aae0b007-4602-4bf7-bf6d-21d7b1e347b9')
+INSERT [dbo].[AspNetRoles] ([Id], [Name], [NormalizedName], [ConcurrencyStamp]) VALUES (N'c55700a8-c5b0-407e-9521-a31f03318a72', N'Admin', N'ADMIN', N'03a936d0-8ec7-4e31-aff6-32b67cec09d5')
+GO
+INSERT [dbo].[AspNetUsers] ([Id], [RefreshToken], [RefreshTokenExpiryTime], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount]) VALUES (N'95df1123-ff55-43f4-956c-ed771b8a444b', N'0EJtAmAwd1ydt2iNw/Q5rRIFmteCKlxAPt6kaPbFiuWKMr+UOt5gn+nbYbnmnUG9ZmfaMgtiNNyEl8m3blQKiw==', CAST(N'2024-03-24T22:04:40.9264943' AS DateTime2), N'subhankar_admin', N'SUBHANKAR_ADMIN', N'subha_admin@example.com', N'SUBHA_ADMIN@EXAMPLE.COM', 0, N'AQAAAAEAACcQAAAAENvOFhy6Vmd8NydcAd/15AaNQfOQQ6An5bU77Foc+ARmoFUwFj6ggo5vNdh/wXg4VQ==', N'PVIWKFOSZO7M7YGVV57ZEQJMVX5VNTWE', N'63af4edb-f912-457d-95e0-f89bd4962aa6', NULL, 0, 0, NULL, 1, 0)
+INSERT [dbo].[AspNetUsers] ([Id], [RefreshToken], [RefreshTokenExpiryTime], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount]) VALUES (N'a2b80153-cfd1-41eb-ae4c-7ba93594f1d8', N'xv9/SHfW+8gGlWmv7lVlqEWcte+zETjnliZl9BxSAk08AXA2OGFhiaiRJ4TSV2yHaCBGFN5KteCPVK8AQTMnzg==', CAST(N'2024-03-23T22:56:03.9282980' AS DateTime2), N'subhankar_user', N'SUBHANKAR_USER', N'subha_user@example.com', N'SUBHA_USER@EXAMPLE.COM', 0, N'AQAAAAEAACcQAAAAEPhP3MiwIh01wAdCcoVAqLPE0Ry50Ws0ulGbcTAsGU3igMX6HiXH1m5WxNa5An4wQw==', N'4XR5MHN4ZXTRPG47GW3PRPPTITZBBPNJ', N'3056598a-4768-40da-a05e-f8536511729a', NULL, 0, 0, NULL, 1, 0)
+GO
+INSERT [dbo].[AspNetUserRoles] ([UserId], [RoleId]) VALUES (N'a2b80153-cfd1-41eb-ae4c-7ba93594f1d8', N'c122a4cf-a936-48c9-976b-a74305498808')
+INSERT [dbo].[AspNetUserRoles] ([UserId], [RoleId]) VALUES (N'95df1123-ff55-43f4-956c-ed771b8a444b', N'c55700a8-c5b0-407e-9521-a31f03318a72')
+GO
