@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SearchAPI.Identity;
 
-namespace SearchAPI.Data
+namespace SearchAPI.Identity.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

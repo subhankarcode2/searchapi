@@ -1,4 +1,4 @@
-﻿namespace SearchAPI.Models
+﻿namespace SearchAPI.Common.Classes.Identity
 {
     public class TokenModel
     {

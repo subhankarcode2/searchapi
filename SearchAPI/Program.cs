@@ -1,15 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using NLog.Extensions.Logging;
-using SearchAPI.Data;
-using SearchAPI.Identity;
 using SearchAPI.Middleware;
-using SearchAPI.Models;
 using System.Text;
+using SearchAPI.Common.Classes.Identity;
 
 //using NLog;
 
@@ -19,14 +13,28 @@ ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
 
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("ConnStr")));
-
 builder.Services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(s =>
+{
+    //s.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    //{
+    //    Title = "JWT_Token_Auth_API",
+    //    Version = "v1"
+    //});
+    s.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In=Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Here Enter JWT token with bearer format"
+    });
+});
 
 builder.Services.AddMvc().AddXmlSerializerFormatters();
 
@@ -39,12 +47,11 @@ builder.Services.AddLogging(logging =>
 
 // Add NLog as the logger provider
 builder.Services.AddSingleton<ILoggerProvider, NLogLoggerProvider>();
-builder.Services.AddScoped<RequestResponseLoggingMiddleware>();
 
-// For Identity
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+//Custom Middlewares
+builder.Services.AddScoped<RequestResponseLoggingMiddleware>();
+builder.Services.AddScoped<AntiXssMiddleware>();
+
 
 // Adding Authentication
 builder.Services.AddAuthentication(options =>
@@ -90,6 +97,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseAntiXss();
 app.MapControllers();
 
 app.Run();

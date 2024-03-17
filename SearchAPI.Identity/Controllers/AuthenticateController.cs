@@ -4,14 +4,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SearchAPI.Identity;
-using SearchAPI.Models;
+using SearchAPI.Common.Classes.Dto;
+using SearchAPI.Common.Classes.Identity;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace SearchAPI.Controllers
+namespace SearchAPI.Identity.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

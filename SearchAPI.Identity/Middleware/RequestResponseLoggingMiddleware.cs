@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace SearchAPI.Middleware
+namespace SearchAPI.Identity.Middleware.Middleware
 {
 
     public class RequestResponseLoggingMiddleware : IMiddleware

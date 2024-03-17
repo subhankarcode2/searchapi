@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SearchAPI.Models
+namespace SearchAPI.Common.Classes.Identity
 {
     public class RegisterModel
     {

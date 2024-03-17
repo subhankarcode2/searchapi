@@ -1,4 +1,4 @@
-﻿namespace SearchAPI.Identity
+﻿namespace SearchAPI.Common.Classes.Identity
 {
     public static class UserRoles
     {
