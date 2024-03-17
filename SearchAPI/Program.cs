@@ -4,6 +4,11 @@ using NLog.Extensions.Logging;
 using SearchAPI.Middleware;
 using System.Text;
 using SearchAPI.Common.Classes.Identity;
+using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using SearchAPI.Data;
+using SearchAPI.Repository;
+using Microsoft.AspNetCore.OData;
 
 //using NLog;
 
@@ -12,27 +17,43 @@ var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("ConnStr")));
 
 builder.Services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
 
-builder.Services.AddControllers();
+builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+
+builder.Services.AddControllers().AddOData(options =>
+{
+    options.Select().Filter().OrderBy().SetMaxTop(20);
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(s =>
 {
-    //s.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-    //{
-    //    Title = "JWT_Token_Auth_API",
-    //    Version = "v1"
-    //});
-    s.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme()
+    s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
         Name = "Authorization",
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+        Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer",
         BearerFormat = "JWT",
-        In=Microsoft.OpenApi.Models.ParameterLocation.Header,
+        In = ParameterLocation.Header,
         Description = "Here Enter JWT token with bearer format"
+    });
+    s.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+         new OpenApiSecurityScheme()
+            {
+                Reference=new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+             new string[]{}
+        }
     });
 });
 
@@ -51,6 +72,7 @@ builder.Services.AddSingleton<ILoggerProvider, NLogLoggerProvider>();
 //Custom Middlewares
 builder.Services.AddScoped<RequestResponseLoggingMiddleware>();
 builder.Services.AddScoped<AntiXssMiddleware>();
+builder.Services.AddScoped<SearchQueryHandlerMiddleware>();
 
 
 // Adding Authentication
@@ -80,6 +102,17 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddResponseCaching();
+
+builder.Services.AddHsts(options =>
+{
+    options.Preload = true;
+    options.IncludeSubDomains = true;
+    options.MaxAge = TimeSpan.FromDays(60);
+    options.ExcludedHosts.Add("example.com");
+    options.ExcludedHosts.Add("www.example.com");
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -88,10 +121,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    app.UseHsts();
+}
 
 app.UseHttpsRedirection();
 
+app.UseResponseCaching();
+
 app.UseRequestResponseLogging();
+
+app.UseSearchQueryHandler();
 
 app.UseAuthentication();
 
